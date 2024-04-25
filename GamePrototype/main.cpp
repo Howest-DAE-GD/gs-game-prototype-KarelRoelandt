@@ -12,7 +12,7 @@ int SDL_main(int argv, char** args)
 
 	StartHeapControl();
 
-	Game* pGame{ new Game{ Window{ "Gp Scripting - Roelandt, Karel - 1DAE28", 846.f , 500.f } } };
+	Game* pGame{ new Game{ Window{ "Gp Scripting - Roelandt, Karel - 1DAE28", 1600.f , 900.f } } };
 	pGame->Run();
 	delete pGame;
 

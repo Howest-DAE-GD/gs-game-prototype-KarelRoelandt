@@ -1,5 +1,7 @@
 #pragma once
 #include "BaseGame.h"
+#include "SVGParser.h"
+
 class Game : public BaseGame
 {
 public:
@@ -22,9 +24,31 @@ public:
 	void ProcessMouseUpEvent( const SDL_MouseButtonEvent& e ) override;
 
 private:
+	struct Border4f
+	{
+		float left;
+		float right;
+		float top;
+		float bottom;
+	};
 
 	// FUNCTIONS
 	void Initialize();
 	void Cleanup( );
 	void ClearBackground( ) const;
+
+	std::vector<std::vector<Point2f>> m_Walls;
+
+	float m_BurglarSize{};
+	Point2f m_BurglarPos{};
+
+	float m_step{};
+	float m_AccSec{};
+	float m_speed{};
+	float m_elapsedSec{};
+
+	Border4f m_Steps{};
+
+	
+	
 };
