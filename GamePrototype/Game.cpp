@@ -20,9 +20,9 @@ void Game::Initialize( )
 	if (!SVGParser::GetVerticesFromSvgFile("map.svg", m_Walls)) std::cout << "Mapfile error!";
 
 	m_BurglarSize = 20.f;
-	m_BurglarPos = Point2f{ 1000.f, 100.f};
+	m_BurglarPos = Point2f{ 1450.f, 50.f};
 
-	m_speed = 500.f;
+	m_speed = 1500.f;
 	
 }
 
