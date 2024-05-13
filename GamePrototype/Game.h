@@ -41,6 +41,16 @@ private:
 
 	float m_BurglarSize{};
 	Point2f m_BurglarPos{};
+	bool m_Hit{};
+
+	float m_ArtefactSize{};
+	Point2f m_ArtefactPos{};
+	bool m_Pickup{};
+	std::vector<Point2f> m_ArtefactColl{};
+
+	float m_BoulderSize{};
+	Point2f m_BoulderPos{};
+	std::vector<Point2f> m_BoulderColl{};
 
 	float m_step{};
 	float m_AccSec{};
