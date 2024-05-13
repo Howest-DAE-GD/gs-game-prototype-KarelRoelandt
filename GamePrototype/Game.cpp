@@ -38,7 +38,7 @@ void Game::Cleanup( )
 {
 }
 
-void Game::Update( float elapsedSec )
+void Game::Update(float elapsedSec)
 {
 	Border4f walls{};
 
@@ -71,7 +71,7 @@ void Game::Update( float elapsedSec )
 		}
 	}
 
-	if(utils::IsOverlapping(Rectf{ m_ArtefactPos.x, m_ArtefactPos.y, m_ArtefactSize, m_ArtefactSize }, Circlef{ m_BurglarPos, m_BurglarSize }))
+	if (utils::IsOverlapping(Rectf{ m_ArtefactPos.x, m_ArtefactPos.y, m_ArtefactSize, m_ArtefactSize }, Circlef{ m_BurglarPos, m_BurglarSize }))
 		m_Pickup = true;
 
 
@@ -80,20 +80,23 @@ void Game::Update( float elapsedSec )
 	if (m_BurglarPos.y + m_BurglarSize < walls.top || walls.top == 0) m_BurglarPos.y += m_Steps.top * elapsedSec;
 	if (m_BurglarPos.y - m_BurglarSize > walls.bottom || walls.bottom == 0) m_BurglarPos.y -= m_Steps.bottom * elapsedSec;
 
-	if (m_Pickup == true) 
+	if (m_Pickup == true)
 	{
 		m_ArtefactPos.x = m_BurglarPos.x - m_ArtefactSize / 2;
 		m_ArtefactPos.y = m_BurglarPos.y - m_ArtefactSize / 2;
 	}
 
-	if (m_BoulderPos.x <= 1650.f)
+	if (m_Pickup)
 	{
-		m_BoulderPos.x += 600 * elapsedSec;
-	}
-	else
-	{
-		m_BoulderPos.x = rand() % 200;
-		m_BoulderPos.y = 750 + rand() % 2 * 50;
+		if (m_BoulderPos.x <= 1650.f)
+		{
+			m_BoulderPos.x += 600 * elapsedSec;
+		}
+		else
+		{
+			m_BoulderPos.x = rand() % 200;
+			m_BoulderPos.y = 750 + rand() % 2 * 50;
+		}
 	}
 
 	if (utils::IsOverlapping(Circlef{ m_BoulderPos, m_BoulderSize }, Circlef{ m_BurglarPos, m_BurglarSize }))
