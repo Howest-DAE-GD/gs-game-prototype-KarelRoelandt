@@ -37,6 +37,8 @@ private:
 	void Cleanup( );
 	void ClearBackground( ) const;
 
+	void InitGame();
+
 	std::vector<std::vector<Point2f>> m_Walls;
 
 	float m_BurglarSize{};
@@ -51,6 +53,20 @@ private:
 	float m_BoulderSize{};
 	Point2f m_BoulderPos{};
 	std::vector<Point2f> m_BoulderColl{};
+
+	float m_ArrowWidth{};
+	float m_ArrowLength{};
+	float m_ArrowSpeed{};
+	std::vector<Point2f> m_ArrowsUp;
+	std::vector<Point2f> m_ArrowsDown;
+
+	float m_HoleSize{};
+	float m_HoleStep{};
+	Point2f m_HolePos{};
+
+	float m_SpiderSize{};
+	std::vector<Point2f> m_SpiderColl{};
+
 
 	float m_step{};
 	float m_AccSec{};

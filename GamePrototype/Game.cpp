@@ -19,18 +19,7 @@ void Game::Initialize( )
 {
 	if (!SVGParser::GetVerticesFromSvgFile("map.svg", m_Walls)) std::cout << "Mapfile error!";
 
-	m_BurglarSize = 20.f;
-	m_BurglarPos = Point2f{ 1450.f, 50.f};
-	m_Hit = false;
-
-	m_ArtefactSize = 20.f;
-	m_ArtefactPos = Point2f{ 100.f, 100.f };
-	m_Pickup = false;
-
-	m_BoulderSize = 40.f;
-	m_BoulderPos = Point2f{ -50.f, 800.f};
-
-	m_speed = 200.f;
+	InitGame();
 	
 }
 
@@ -94,14 +83,117 @@ void Game::Update(float elapsedSec)
 		}
 		else
 		{
-			m_BoulderPos.x = rand() % 200;
-			m_BoulderPos.y = 750 + rand() % 2 * 50;
+			m_BoulderPos.x = float(rand() % 200);
+			m_BoulderPos.y = float(750 + rand() % 2 * 50);
+		}
+	}
+	
+	for (int i{}; i < 5; ++i)
+	{
+		int randArrow{ rand() % 5 };
+		if (m_ArrowsDown[randArrow].y > 300)
+		{
+			m_ArrowsDown[randArrow].y -= m_ArrowSpeed * elapsedSec;
+		}
+		else
+		{
+			m_ArrowsDown[randArrow].y = 650;
+		}
+	}
+
+	for (int i{}; i < 5; ++i)
+	{
+		int dirX{ rand() % 3 - 1 };
+		int dirY{ rand() % 3 - 1 };
+		int randSpider{ rand() % 5 };
+
+		float spiderSpeed{ 400.f };
+
+		if ((m_SpiderColl[randSpider].x + spiderSpeed * dirX * elapsedSec) < 1150 && (m_SpiderColl[randSpider].x + spiderSpeed * dirX * elapsedSec) > 750)
+		{
+			m_SpiderColl[randSpider].x += spiderSpeed * dirX * elapsedSec;
+		}
+		if ((m_SpiderColl[randSpider].y + spiderSpeed * dirY * elapsedSec) < 240 && (m_SpiderColl[randSpider].y + spiderSpeed * dirY * elapsedSec) > 60)
+		{
+			m_SpiderColl[randSpider].y += spiderSpeed * dirY * elapsedSec;
+		}
+	}
+
+	if (m_BurglarPos.x < 700 && m_BurglarPos.y < 250 && m_Pickup)
+	{
+		for (int i{}; i < 5; ++i)
+		{
+			int randArrow{ rand() % 5 };
+			if (m_ArrowsUp[randArrow].y < 250)
+			{
+				m_ArrowsUp[randArrow].y += m_ArrowSpeed * elapsedSec;
+			}
+			else
+			{
+				m_ArrowsUp[randArrow].y = 0;
+			}
+		}
+	}
+	else
+	{
+		for (int i{}; i < 5; ++i)
+		{
+			m_ArrowsUp[i].y = 0;
+		}
+	}
+
+	for (int i{}; i < 5; ++i)
+	{
+		if (utils::IsOverlapping(Circlef{m_ArrowsDown[i].x, m_ArrowsDown[i].y, m_ArrowWidth }, Circlef{m_BurglarPos, m_BurglarSize}))
+		{
+			m_Hit = true;
+		}
+	}
+
+	if (m_BurglarPos.x < 700 && m_BurglarPos.y > 200 && m_Pickup)
+	{
+		m_HoleSize += m_HoleStep * elapsedSec;
+
+		if (m_HoleSize >= 120)
+		{
+			m_HoleStep *= -1;
+		}
+		else if (m_HoleSize < 0)
+		{
+			m_HoleStep *= -1;
 		}
 	}
 
 	if (utils::IsOverlapping(Circlef{ m_BoulderPos, m_BoulderSize }, Circlef{ m_BurglarPos, m_BurglarSize }))
 	{
 		m_Hit = true;
+	}
+
+	if (utils::IsOverlapping(Circlef{ m_HolePos, m_HoleSize }, Circlef{ m_BurglarPos, m_BurglarSize }))
+	{
+		m_Hit = true;
+	}
+
+	for (int i{}; i < 5; ++i)
+	{
+		Rectf tempArrowBox{ m_ArrowsUp[i].x, m_ArrowsUp[i].y, m_ArrowWidth, m_ArrowLength };
+		if (utils::IsOverlapping(tempArrowBox, Circlef{ m_BurglarPos, m_BurglarSize }))
+		{
+			m_Hit = true;
+		}
+	}
+
+	for (int i{}; i < 5; ++i)
+	{
+		if (utils::IsOverlapping(Circlef{ m_SpiderColl[i], 10.f}, Circlef{m_BurglarPos, m_BurglarSize}))
+		{
+			m_Hit = true;
+		}
+	}
+
+	if (m_Hit)
+	{
+		InitGame();
 	}
 
 
@@ -121,6 +213,24 @@ void Game::Draw( ) const
 {
 	ClearBackground( );
 
+	utils::SetColor(Color4f{ 0.f, 1.f, 0.f, 1.f });
+	for (int i{}; i < 5; ++i)
+	{
+		utils::FillEllipse(m_SpiderColl[i], 10, 10);
+	}
+
+	utils::SetColor(Color4f{ 1.f, 0.f, 0.f, 1.f });
+	for (int i{}; i < 5; ++i)
+	{
+		utils::FillRect(m_ArrowsUp[i], m_ArrowWidth, m_ArrowLength);
+	}
+
+	utils::SetColor(Color4f{ 1.0f, .5f, 0.f, .5f });
+	for (int i{}; i < 5; ++i)
+	{
+		utils::FillEllipse(m_ArrowsDown[i], m_ArrowWidth, m_ArrowWidth);
+	}
+
 	utils::SetColor(Color4f{ 0.42f, 0.42f, 0.42f, 1.f });
 	utils::FillEllipse(m_BoulderPos, m_BoulderSize, m_BoulderSize);
 
@@ -137,7 +247,8 @@ void Game::Draw( ) const
 	utils::SetColor(Color4f{ 0.75f, 0.75f, 0.f, 1.f });
 	utils::FillRect(m_ArtefactPos, m_ArtefactSize, m_ArtefactSize);
 
-
+	utils::SetColor(Color4f{ .05f, .05f, .05f, 1.f });
+	utils::FillEllipse(m_HolePos, m_HoleSize, m_HoleSize);
 
 }
 
@@ -238,4 +349,45 @@ void Game::ClearBackground( ) const
 {
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 	glClear( GL_COLOR_BUFFER_BIT );
+}
+
+void Game::InitGame()
+{
+	m_BurglarSize = 20.f;
+	m_BurglarPos = Point2f{ 1450.f, 50.f };
+	m_Hit = false;
+
+	m_ArtefactSize = 20.f;
+	m_ArtefactPos = Point2f{ 100.f, 100.f };
+	m_Pickup = false;
+
+	m_BoulderSize = 40.f;
+	m_BoulderPos = Point2f{ -50.f, 800.f };
+
+	m_speed = 200.f;
+
+	m_ArrowWidth = 4.f;
+	m_ArrowLength = 30.f;
+	m_ArrowSpeed = 200.f;
+	float arrowStartPosX{ 190.f };
+	for (int i{}; i < 5; ++i)
+	{
+		m_ArrowsUp.push_back(Point2f{ arrowStartPosX + 70 * i, 20.f });
+	}
+
+	float dropStartPosX{ 950.f };
+	for (int i{}; i < 5; ++i)
+	{
+		m_ArrowsDown.push_back(Point2f{ dropStartPosX + 105 * i, 650.f });
+	}
+
+	m_HoleSize = 0.f ;
+	m_HoleStep = 40.f ;
+	m_HolePos = Point2f{ 480.f, 480.f};
+
+	for (int i{}; i < 5; ++i)
+	{
+		m_SpiderColl.push_back(Point2f{ 800.f + rand() % 200, 100.f + rand() % 100});
+	}
+
 }
