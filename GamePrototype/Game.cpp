@@ -225,7 +225,7 @@ void Game::Draw( ) const
 		utils::FillRect(m_ArrowsUp[i], m_ArrowWidth, m_ArrowLength);
 	}
 
-	utils::SetColor(Color4f{ 1.0f, .5f, 0.f, .5f });
+	utils::SetColor(Color4f{ 1.0f, .5f, 0.f, .7f });
 	for (int i{}; i < 5; ++i)
 	{
 		utils::FillEllipse(m_ArrowsDown[i], m_ArrowWidth, m_ArrowWidth);
