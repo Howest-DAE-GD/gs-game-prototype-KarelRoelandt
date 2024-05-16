@@ -109,7 +109,7 @@ void Game::Update(float elapsedSec)
 
 		float spiderSpeed{ 400.f };
 
-		if ((m_SpiderColl[randSpider].x + spiderSpeed * dirX * elapsedSec) < 1150 && (m_SpiderColl[randSpider].x + spiderSpeed * dirX * elapsedSec) > 750)
+		if ((m_SpiderColl[randSpider].x + spiderSpeed * dirX * elapsedSec) < 1100 && (m_SpiderColl[randSpider].x + spiderSpeed * dirX * elapsedSec) > 750)
 		{
 			m_SpiderColl[randSpider].x += spiderSpeed * dirX * elapsedSec;
 		}
@@ -247,7 +247,7 @@ void Game::Draw( ) const
 	utils::SetColor(Color4f{ 0.75f, 0.75f, 0.f, 1.f });
 	utils::FillRect(m_ArtefactPos, m_ArtefactSize, m_ArtefactSize);
 
-	utils::SetColor(Color4f{ .05f, .05f, .05f, 1.f });
+	utils::SetColor(Color4f{ .2f, .2f, .2f, 1.f });
 	utils::FillEllipse(m_HolePos, m_HoleSize, m_HoleSize);
 
 }
